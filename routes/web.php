@@ -15,4 +15,6 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->get('/', function () use ($router) {
         return $router->app->version();
     });
+    $router->post('register', 'UserManagementController@register');
+    $router->post('login', 'UserManagementController@retrieve');
 });
