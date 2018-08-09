@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Session;
 use App\Models\Users;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
  * @package App\Http\Controllers
  */
 class UserManagementController extends Controller {
+    use ResponseTrait;
     /**
      * UserManagementController constructor.
      */
@@ -44,8 +46,8 @@ class UserManagementController extends Controller {
             'bio' => $request->input('bio', 'Bio not filled')
         );
 
-        $response = Users::create($fieldMapper);
-        return response()->json($response);
+        $this->data = Users::create($fieldMapper);
+        return response()->json($this->responseSerialize());
     }
 
     /**
@@ -77,11 +79,11 @@ class UserManagementController extends Controller {
 
         $current_session = Session::create($fieldMapper);
 
-        $response = array(
+        $this->data = array(
             'profile' => $current_user,
             'session' => $current_session
         );
-        return response()->json($response);
+        return response()->json($this->responseSerialize());
     }
 
     /**
@@ -92,8 +94,7 @@ class UserManagementController extends Controller {
         $condition = array(
             ['session_id', '=', $request->header('session')]
         );
-        $response = Session::with('user')->where($condition)->firstOrFail();
-
-        return response()->json($response);
+        $this->data = Session::with('user')->where($condition)->firstOrFail();
+        return response()->json($this->responseSerialize());
     }
 }

@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Models\Session;
+use App\Traits\ResponseTrait;
 use Closure;
 
 class UserAuthorizationMiddleware {
+    use ResponseTrait;
     /**
      * Handle an incoming request.
      *
@@ -20,7 +22,9 @@ class UserAuthorizationMiddleware {
         $current_user = Session::with('user')->where($condition)->first();
 
         if(empty($current_user)) {
-            return response()->json(['error' => 'Sorry, no session such exist for any user']);
+            $this->err_code = 403;
+            $this->err_message = 'Sorry, no session such exist for any user';
+            return response()->json($this->responseSerialize(False));
         }
 
         return $next($request);
