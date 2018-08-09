@@ -19,7 +19,7 @@ class CreateSessionTable extends Migration
             $table->unsignedInteger('user_id');
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nulable();
-            $table->string('device-token')->nullable();
+            $table->string('device_token')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
