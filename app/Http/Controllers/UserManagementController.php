@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Session;
 use App\Models\Users;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 /**
@@ -66,8 +66,21 @@ class UserManagementController extends Controller {
             ['password', '=', sha1($request->input('password'))]
         );
 
-        $response = Users::where($condition)->firstOrFail();
+        $current_user = Users::where($condition)->firstOrFail();
 
+        $fieldMapper = array(
+            'user_id' => $current_user->id,
+            'session_id' => hash_hmac('sha256', str_random(20), microtime()),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        );
+
+        $current_session = Session::create($fieldMapper);
+
+        $response = array(
+            'profile' => $current_user,
+            'session' => $current_session
+        );
         return response()->json($response);
     }
 }
