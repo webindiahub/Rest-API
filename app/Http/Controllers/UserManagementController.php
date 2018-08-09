@@ -83,4 +83,17 @@ class UserManagementController extends Controller {
         );
         return response()->json($response);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile(Request $request) {
+        $condition = array(
+            ['session_id', '=', $request->header('session')]
+        );
+        $response = Session::with('user')->where($condition)->firstOrFail();
+
+        return response()->json($response);
+    }
 }
