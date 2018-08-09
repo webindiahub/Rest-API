@@ -14,6 +14,7 @@ class UsersSeeder extends Seeder {
             'first_name' => 'rahul',
             'last_name' => 'wih',
             'email' => 'rahul@wih.com',
+            'password' => sha1('password'),
             'gender' => 'male',
             'bio' => 'Hello World'
         ]);
