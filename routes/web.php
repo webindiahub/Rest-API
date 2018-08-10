@@ -19,5 +19,6 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->post('login', 'UserManagementController@retrieve');
     $router->group(['middleware' => ['user_authorization'], 'prefix' => 'user'], function () use ($router) {
         $router->get('profile', 'UserManagementController@profile');
+        $router->get('collection', 'UserManagementController@collection');
     });
 });

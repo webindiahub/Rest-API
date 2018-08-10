@@ -97,4 +97,39 @@ class UserManagementController extends Controller {
         $this->data = Session::with('user')->where($condition)->firstOrFail();
         return response()->json($this->responseSerialize());
     }
+
+    /**
+     * Use Laravel Collection and PHP Functional Programming
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function collection() {
+//        $arr = ['rahul', 'himanshu', 'wih', 'karan', 'web india hub', 'rahul'];
+//        $collect = collect($arr);
+
+//        $this->data = $collect->map(function ($value) use ($arr) {
+//            return ucfirst($value);
+//        });        Map, Reduce, Filter
+//         Lambda, Closure, Anonymous Function
+//         []() { statement }
+//         [] => initialization list use()
+//         () => Parameters
+//         {} => Statements
+
+//        $arr = [1,2,3,4,5,6,7];
+//        $collection = collect($arr);
+//
+//        $this->data = $collection->reduce(function ($carry, $value) {
+//            return $carry + $value;
+//        });
+
+//        $arr = ['rahul', 'wih', Null, 'himanshu', Null, 'traits'];
+//        $collection = collect($arr);
+//
+//        $this->data = $collection->filter(function ($value) {
+//            return !empty($value);
+//        });
+
+        return response()->json($this->responseSerialize());
+    }
 }
