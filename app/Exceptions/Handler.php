@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
+    use ExceptionTrait;
     /**
      * A list of the exception types that should not be reported.
      *
@@ -24,12 +25,8 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $e
-     * @return void
+     * @param Exception $e
+     * @throws Exception
      */
     public function report(Exception $e)
     {
@@ -45,6 +42,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        return response()->json($this->apiException($request, $e), 401)
+                ->header('Content-Type', 'application/json');
+        // return parent::render($request, $e);
     }
 }
