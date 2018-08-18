@@ -132,4 +132,11 @@ class UserManagementController extends Controller {
 
         return response()->json($this->responseSerialize());
     }
+
+    public function homepage($name) {
+        $current_user = Users::all();
+        return view('homepage', with([
+            'profile' => $current_user
+        ]));
+    }
 }
