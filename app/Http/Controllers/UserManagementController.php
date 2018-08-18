@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Session;
 use App\Models\Users;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
  * @package App\Http\Controllers
  */
 class UserManagementController extends Controller {
+    use ResponseTrait;
     /**
      * UserManagementController constructor.
      */
@@ -44,8 +46,8 @@ class UserManagementController extends Controller {
             'bio' => $request->input('bio', 'Bio not filled')
         );
 
-        $response = Users::create($fieldMapper);
-        return response()->json($response);
+        $this->data = Users::create($fieldMapper);
+        return response()->json($this->responseSerialize());
     }
 
     /**
@@ -66,8 +68,75 @@ class UserManagementController extends Controller {
             ['password', '=', sha1($request->input('password'))]
         );
 
-        $response = Users::where($condition)->firstOrFail();
+        $current_user = Users::where($condition)->firstOrFail();
 
-        return response()->json($response);
+        $fieldMapper = array(
+            'user_id' => $current_user->id,
+            'session_id' => hash_hmac('sha256', str_random(20), microtime()),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        );
+
+        $current_session = Session::create($fieldMapper);
+
+        $this->data = array(
+            'profile' => $current_user,
+            'session' => $current_session
+        );
+        return response()->json($this->responseSerialize());
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile(Request $request) {
+        $condition = array(
+            ['session_id', '=', $request->header('session')]
+        );
+        $this->data = Session::with('user')->where($condition)->firstOrFail();
+        return response()->json($this->responseSerialize());
+    }
+
+    /**
+     * Use Laravel Collection and PHP Functional Programming
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function collection() {
+//        $arr = ['rahul', 'himanshu', 'wih', 'karan', 'web india hub', 'rahul'];
+//        $collect = collect($arr);
+
+//        $this->data = $collect->map(function ($value) use ($arr) {
+//            return ucfirst($value);
+//        });        Map, Reduce, Filter
+//         Lambda, Closure, Anonymous Function
+//         []() { statement }
+//         [] => initialization list use()
+//         () => Parameters
+//         {} => Statements
+
+//        $arr = [1,2,3,4,5,6,7];
+//        $collection = collect($arr);
+//
+//        $this->data = $collection->reduce(function ($carry, $value) {
+//            return $carry + $value;
+//        });
+
+//        $arr = ['rahul', 'wih', Null, 'himanshu', Null, 'traits'];
+//        $collection = collect($arr);
+//
+//        $this->data = $collection->filter(function ($value) {
+//            return !empty($value);
+//        });
+
+        return response()->json($this->responseSerialize());
+    }
+
+    public function homepage($name) {
+        $current_user = Users::all();
+        return view('homepage', with([
+            'profile' => $current_user
+        ]));
     }
 }

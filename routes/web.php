@@ -17,4 +17,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     });
     $router->post('register', 'UserManagementController@register');
     $router->post('login', 'UserManagementController@retrieve');
+    $router->get('home/{name}', 'UserManagementController@homepage');
+    $router->group(['middleware' => ['user_authorization'], 'prefix' => 'user'], function () use ($router) {
+        $router->get('profile', 'UserManagementController@profile');
+        $router->get('collection', 'UserManagementController@collection');
+    });
 });
