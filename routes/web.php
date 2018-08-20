@@ -15,6 +15,12 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->get('/', function () use ($router) {
         return $router->app->version();
     });
+    $router->get('check', function() {
+        return view('admin.login');
+    });
+    $router->post('index', function() {
+        return view('admin.security');
+    });
     $router->post('register', 'UserManagementController@register');
     $router->post('login', 'UserManagementController@retrieve');
     $router->get('home/{name}', 'UserManagementController@homepage');
